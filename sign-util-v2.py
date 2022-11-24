@@ -111,31 +111,38 @@ parser.add_option(
     "--certificate",
     dest="certificate",
     help="The signer certificate path (optional if included in email, put a wrong path (when verifying) if included certs want to be used)",
-    default="../SSL/Certificats/client.pem",
+    default="data/user.pem",
 )
 parser.add_option(
     "-a",
     "--cafile",
     dest="cafile",
     help="The root certificate path",
-    default="../SSL/Certificats/root.pem",
+    default="data/root.pem",
 )
 parser.add_option(
     "-p",
     "--privatekey",
     dest="privatekey",
     help="The signer private key path",
-    default="../SSL/Certificats/clientkey.pem",
+    default="data/userkey.pem",
 )
 parser.add_option(
-    "-i", "--infile", dest="infile", help="The input file to sign", default="text2.txt"
+    "-i", "--infile", dest="infile", help="The input file to sign", default="data/file_to_sign.txt"
 )
 parser.add_option(
     "-m",
     "--mimefile",
     dest="mimefile",
     help="The output smime file signed or verified",
-    default="text2.eml",
+    default="data/smime_output.eml",
+)
+parser.add_option(
+    "-r",
+    "--crl",
+    dest="crl",
+    help="The revokation list",
+    default="data/revokation_list.crl",
 )
 
 (args, _) = parser.parse_args()
