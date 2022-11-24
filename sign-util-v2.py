@@ -54,15 +54,18 @@ def extractPKCS7(message):
     return ret
 
 
-def verifyChain(cacert, cert):
+def verifyChain(cacert, cert, crl):
     try:
         store = crypto.X509Store()
         store.add_cert(cacert)
+        if crl:
+            store.add_crl(crl)
+        store.set_flags(crypto.X509StoreFlags.CRL_CHECK)
         store_ctx = crypto.X509StoreContext(store, cert)
         store_ctx.verify_certificate()
         print("Cadena de certificació verificada")
-    except:
-        print("Error en la verficació de la cadena de certificats")
+    except Exception as e:
+        print(f"Error en la verficació de la cadena de certificats. Error: {e}")
 
     return True
 
@@ -142,7 +145,7 @@ parser.add_option(
     "--crl",
     dest="crl",
     help="The revokation list",
-    default="data/revokation_list.crl",
+    default="data/crl/crlist.pem",
 )
 
 (args, _) = parser.parse_args()
@@ -168,7 +171,12 @@ if args.verify:
         pkey = load_pem_public_key(pk)
 
         verifySignature(message)
-        verifyChain(cacert, clicert)
+        crl = None
+        if args.crl:
+            with open(args.crl, "rb") as f:
+                crldata = f.read()
+                crl = crypto.load_crl(crypto.FILETYPE_PEM, crldata)
+        verifyChain(cacert, clicert, crl)
 
     else:
         # Certs must be included in mail
@@ -186,7 +194,12 @@ if args.verify:
 
         clicertdata = verifySignature(message)
         clicert = crypto.load_certificate(crypto.FILETYPE_ASN1, clicertdata)
-        verifyChain(cacert, clicert)
+        crl = None
+        if args.crl:
+            with open(args.crl, "rb") as f:
+                crldata = f.read()
+                crl = crypto.load_crl(crypto.FILETYPE_PEM, crldata)
+        verifyChain(cacert, clicert, crl)
 
 else:
     with open(args.certificate, "rb") as f:
