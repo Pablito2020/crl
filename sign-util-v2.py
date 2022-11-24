@@ -60,7 +60,7 @@ def verifyChain(cacert, cert, crl):
         store.add_cert(cacert)
         if crl:
             store.add_crl(crl)
-        store.set_flags(crypto.X509StoreFlags.CRL_CHECK)
+            store.set_flags(crypto.X509StoreFlags.CRL_CHECK)
         store_ctx = crypto.X509StoreContext(store, cert)
         store_ctx.verify_certificate()
         print("Cadena de certificació verificada")
