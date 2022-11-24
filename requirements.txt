@@ -1,0 +1,2 @@
+cryptography===38.0.3
+asn1crypto===1.5.1
