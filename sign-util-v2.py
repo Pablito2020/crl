@@ -145,7 +145,7 @@ parser.add_option(
     "--crl",
     dest="crl",
     help="The revokation list",
-    default="data/crl/crlist.pem",
+    default=None,
 )
 
 (args, _) = parser.parse_args()
